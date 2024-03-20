@@ -55,3 +55,7 @@ charts:
     valueFile: "value-files/admin-dashboard/values.yaml"
     parameters:
       deployment.replicaCount: "1"
+  # elk-stack
+  elastic-stack:
+    namespace: monitoring
+    targetRevision: "7.17.3-route-bugfix"
