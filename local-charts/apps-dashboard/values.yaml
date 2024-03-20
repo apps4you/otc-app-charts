@@ -1,0 +1,218 @@
+defaultDashboard:
+  logoSrc: "logo_white.svg"
+  logoAlt: "IITS Consulting Logo"
+  title: "Tech Admin Board"
+  tiles:
+    kibana:
+      href: "kibana/app/discover"
+      imgSrc: "https://cdn.iconscout.com/icon/free/png-512/elastic-1-283281.png"
+      imgAlt: "Kibana"
+    dashboard:
+      href: "dashboard/"
+      imgSrc: "https://raw.githubusercontent.com/docker-library/docs/a6cc2c5f4bc6658168f2a0abbb0307acaefff80e/traefik/logo.png"
+      imgAlt: "Traefik Dashboard"
+    argocd:
+      href: "argocd"
+      imgSrc: "argo.svg"
+      imgAlt: "ArgoCD"
+    grafana:
+      href: "grafana/login/generic_oauth"
+      imgSrc: "https://seekicon.com/free-icon-download/grafana_2.png"
+      imgAlt: "Grafana"
+    prometheus:
+      href: "prometheus"
+      imgSrc: "https://www.logolynx.com/images/logolynx/8b/8b0c91b14fb1da0270f0c5ed3d69fac4.jpeg"
+      imgAlt: "Prometheus"
+    elasticsearch:
+      href: "elasticsearch"
+      imgSrc: "https://iconape.com/wp-content/png_logo_vector/elasticsearch-logo.png"
+      imgAlt: "Elasticsearch"
+    kyverno:
+      href: "policies"
+      imgSrc: "https://cdn.shopify.com/s/files/1/1300/8977/collections/kyverno_480x480.png"
+      imgAlt: "Kyverno"
+    vault:
+      href: "vault/"
+      imgSrc: "https://www.drupal.org/files/project-images/Vault_VerticalLogo_FullColor.png"
+      imgAlt: "Vault"
+    keycloak:
+      href: "keycloak/"
+      imgSrc: "https://www.quellwerke.de/fileadmin/Technologie_Logos/keycloak.png"
+      imgAlt: "Keycloak"
+    otc:
+      href: "otcOIDC/"
+      imgSrc: "https://upload.wikimedia.org/wikipedia/commons/7/75/Otc-logo.png"
+      imgAlt: "OTC"
+    akhq:
+      href: "akhq/ui/"
+      imgSrc: "https://cdn.icon-icons.com/icons2/2699/PNG/512/apache_kafka_vertical_logo_icon_169585.png"
+      imgAlt: "akhq (kafka headquarter)"
+    alertManager:
+      href: "/alertmanager"
+      imgSrc: "https://devopy.io/wp-content/uploads/2019/02/bell_260.svg"
+      imgAlt: "Alertmanager"
+    # Add other tiles here...
+
+# You can add here a custom HTML website
+#website: |
+#  <!DOCTYPE html>
+#  <html lang="en">
+#
+#  <head>
+#      <meta charset="UTF-8">
+#      <title>Tech Admin Board</title>
+#      <link rel="stylesheet" href="styles.css"> <!-- Link the new CSS file -->
+#  </head>
+#
+#  <body>
+#  <div class="container">
+#      <img class="logo" src="https://iits-consulting.de/wp-content/uploads/2021/08/iits-logo-2021-red-square-xl.png"
+#           alt="IITS Consulting Logo"/>
+#      <h1>Tech Admin Board</h1>
+#      <div class="tiles">
+#          <a href="argocd" class="tile">
+#              <img src="https://cncf-branding.netlify.app/img/projects/argo/stacked/color/argo-stacked-color.png" alt="ArgoCD">
+#          </a>
+#          <a href="akhq/ui/kafka/topic" class="tile">
+#              <img src="https://kafka.apache.org/images/apache-kafka.png" alt="akhq (kafka headquarter)">
+#          </a>
+#          <a href="dashboard/" class="tile">
+#              <img src="https://raw.githubusercontent.com/docker-library/docs/a6cc2c5f4bc6658168f2a0abbb0307acaefff80e/traefik/logo.png" alt="Traefik Dashboard">
+#          </a>
+#      </div>
+#  </div>
+#  </body>
+#  </html>
+
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+ingress:
+  enabled: true
+  # -- Required, replace it with your host address
+  host:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+  # Creates default Ingress with tls and the given host from .Values.ingress.host
+  defaultIngress:
+    enabled: true
+    ## Default values can be overriden
+    #tls:
+    #  secretName: "apps-dashboard.fullname"
+    #path: "/"
+    #pathType: "Prefix"
+    #backend:
+    #  name: "apps-dashboard.fullname" #tpl supported
+    #  port:
+    #    name: http #tpl supported
+
+  ## If you don't want to use the default Ingress, you can define it here on your own
+  #tls:
+  #  - hosts:
+  #      - "{{.Values.ingress.host}}"
+  #    secretName: "apps-dashboard-cert"
+  #hosts:
+  #  - host: "{{.Values.ingress.host}}"
+  #    paths:
+  #      - path: "/"
+  #        backend:
+  #         name: "{{include "apps-dashboard.fullname" $}}"
+  #         port:
+  #            name: "{{include "apps-dashboard.fullname" $}}"
+
+
+deployment:
+  replicaCount: "2"
+
+  image:
+    repository: lipanski/docker-static-website
+    tag: 2.1.0
+    imagePullPolicy: "IfNotPresent"
+
+  imagePullSecrets: [ ]
+  nameOverride: ""
+  fullnameOverride: ""
+
+  annotations:
+    htmlChecksum: "{{ include (print $.Template.BasePath \"/configmap.yaml\") . | sha256sum }}"
+
+  resources:
+    requests:
+      memory: "4Mi"
+      cpu: "1m"
+    limits:
+      memory: "8Mi"
+      cpu: "10m"
+
+  podAnnotations: { }
+
+  podSecurityContext:
+  # fsGroup: 2000
+
+  securityContext:
+    allowPrivilegeEscalation: false
+    runAsNonRoot: true
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsUser: 1000
+
+  volumes:
+    - name: apps-dashboard-config
+      configMap:
+        name: apps-dashboard-config
+  volumeMounts:
+    - name: apps-dashboard-config
+      mountPath: /home/static
+
+  affinity: { }
+
+  ports:
+    http:
+      port: 3000
+
+  health:
+    startupProbe:
+      path: "/"
+      # initialDelaySeconds: # defaults to 20
+      # periodSeconds: # defaults to 20
+      # failureThreshold: # defaults to 3
+      port: 3000
+    liveness:
+      path: "/"
+      # initialDelaySeconds: # defaults to 20
+      # periodSeconds: # defaults to 20
+      # failureThreshold: # defaults to 3
+      port: 3000
+    readiness:
+      path: "/"
+      # initialDelaySeconds: # defaults to 20
+      # periodSeconds: # defaults to 20
+      # failureThreshold: # defaults to 3
+      port: 3000
+
+  env:
+    MUH: "KUH"
+
+  #set the secret where to take env from
+  envFromSecret:
+
+service:
+  ports:
+    http:
+      #These values are the default values, override them if necessary
+      targetPort: 3000
+      ## port name from above
+      #name: "http"
+      #protocol: TCP
+      #port: 80

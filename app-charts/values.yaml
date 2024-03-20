@@ -13,12 +13,14 @@ global:
       ingressRoute.host: "apps.{{.Values.projectValues.appDomain}}"
       ingressRoute.appDomain: "{{.Values.projectValues.appDomain}}"
 charts:
-  # Override values with local values file
-  iits-admin-dashboard:
+  # Local chart for development purposes
+  apps-dashboard:
     namespace: apps
-    targetRevision: 1.3.0
+    repoURL: "https://github.com/andrianaivo/otc-infrastructure-charts-template.git"
+    targetRevision: "main"
+    path: "local-charts/apps-dashboard"
     # values files needs to be inside this chart
-    valueFile: "value-files/admin-dashboard/values.yaml"
+    valueFile: "value-files/apps-dashboard/values.yaml"
     parameters:
       deployment.replicaCount: "1"
   prometheus-stack:
