@@ -1,7 +1,7 @@
 #Information injected by terraform
 projectValues:
   stage: "SET_BY_TERRAFORM"
-  rootDomain: "SET_BY_TERRAFORM"
+  appDomain: "SET_BY_TERRAFORM"
   basicAuthPassword: "SET_BY_TERRAFORM"
 global:
   helm:
@@ -9,9 +9,9 @@ global:
     repoURL: https://charts.iits.tech/
     # Default Helm Parameters which are injected into every chart
     parameters:
-      ingressRoute.adminDomain: "apps.{{.Values.projectValues.rootDomain}}"
-      ingressRoute.host: "apps.{{.Values.projectValues.rootDomain}}"
-      ingressRoute.rootDomain: "{{.Values.projectValues.rootDomain}}"
+      ingressRoute.adminDomain: "apps.{{.Values.projectValues.appDomain}}"
+      ingressRoute.host: "apps.{{.Values.projectValues.appDomain}}"
+      ingressRoute.appDomain: "{{.Values.projectValues.appDomain}}"
 charts:
   # Override values with local values file
   iits-admin-dashboard:
@@ -32,7 +32,7 @@ charts:
     syncOptions:
       - ServerSideApply=true
     parameters:
-      global.alertmanager.host: "admin.{{.Values.projectValues.rootDomain}}"
-      global.prometheus.host: "admin.{{.Values.projectValues.rootDomain}}"
-      global.grafana.host: "admin.{{.Values.projectValues.rootDomain}}"
-      prometheusStack.grafana.adminPassword: "{{.Values.projectValues.basicAuthAppPassword}}"
+      global.alertmanager.host: "apps.{{.Values.projectValues.appDomain}}"
+      global.prometheus.host: "apps.{{.Values.projectValues.appDomain}}"
+      global.grafana.host: "apps.{{.Values.projectValues.appDomain}}"
+      prometheusStack.grafana.adminPassword: "{{.Values.projectValues.basicAuthPassword}}"
