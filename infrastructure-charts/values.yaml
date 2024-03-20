@@ -54,7 +54,7 @@ charts:
     # values files needs to be inside this chart
     valueFile: "value-files/admin-dashboard/values.yaml"
     parameters:
-      deployment.replicaCount: "1"
+      deployment.replicaCount: "2"
   # elk-stack
   elastic-stack:
     namespace: monitoring
