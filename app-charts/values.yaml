@@ -13,28 +13,9 @@ global:
       ingressRoute.host: "apps.{{.Values.projectValues.appDomain}}"
       ingressRoute.appDomain: "{{.Values.projectValues.appDomain}}"
 charts:
-  # Local chart for development purposes
-  apps-dashboard:
-    namespace: apps
-    repoURL: "https://github.com/andrianaivo/otc-app-charts.git"
-    targetRevision: "main"
-    path: "local-charts/apps-dashboard"
-    # values files needs to be inside this chart
-    valueFile: "value-files/apps-dashboard/values.yaml"
-    parameters:
-      deployment.replicaCount: "1"
-  prometheus-stack:
-    namespace: monitoring
-    repoURL: "https://charts.iits.tech"
-    targetRevision: "43.2.0"
-    ignoreDifferences:
-      - jsonPointers:
-          - /imagePullSecrets
-        kind: ServiceAccount
-    syncOptions:
-      - ServerSideApply=true
-    parameters:
-      global.alertmanager.host: "apps.{{.Values.projectValues.appDomain}}"
-      global.prometheus.host: "apps.{{.Values.projectValues.appDomain}}"
-      global.grafana.host: "apps.{{.Values.projectValues.appDomain}}"
-      prometheusStack.grafana.adminPassword: "{{.Values.projectValues.basicAuthPassword}}"
+  # Remote chart from public helm repo
+  bitnami-minio:
+    namespace: bitnami-minio # Which namespace should the service be deployed
+    repoURL: "https://charts.bitnami.com/bitnami" # Helm repo URL by default it takes the helm repo URL from line 11
+    chart: minio # Name of the chart
+    targetRevision: 14.1.0

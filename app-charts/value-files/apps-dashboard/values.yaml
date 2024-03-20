@@ -1,7 +1,0 @@
-defaultDashboard:
-  title: "Apps Board"
-  tiles:
-    prometheus:
-      href: "prometheus"
-      imgSrc: "https://www.logolynx.com/images/logolynx/8b/8b0c91b14fb1da0270f0c5ed3d69fac4.jpeg"
-      imgAlt: "Prometheus"
