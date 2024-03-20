@@ -16,7 +16,7 @@ charts:
   # Local chart for development purposes
   apps-dashboard:
     namespace: apps
-    repoURL: "https://github.com/andrianaivo/otc-infrastructure-charts-template.git"
+    repoURL: "https://github.com/andrianaivo/otc-app-charts.git"
     targetRevision: "main"
     path: "local-charts/apps-dashboard"
     # values files needs to be inside this chart
