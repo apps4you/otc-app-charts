@@ -104,30 +104,21 @@ ingress:
     traefik.ingress.kubernetes.io/router.tls: "true"
   # Creates default Ingress with tls and the given host from .Values.ingress.host
   defaultIngress:
-    enabled: true
-    ## Default values can be overriden
-    #tls:
-    #  secretName: "apps-dashboard.fullname"
-    #path: "/"
-    #pathType: "Prefix"
-    #backend:
-    #  name: "apps-dashboard.fullname" #tpl supported
-    #  port:
-    #    name: http #tpl supported
+    enabled: false
 
   ## If you don't want to use the default Ingress, you can define it here on your own
-  #tls:
-  #  - hosts:
-  #      - "{{.Values.ingress.host}}"
-  #    secretName: "apps-dashboard-cert"
-  #hosts:
-  #  - host: "{{.Values.ingress.host}}"
-  #    paths:
-  #      - path: "/"
-  #        backend:
-  #         name: "{{include "apps-dashboard.fullname" $}}"
-  #         port:
-  #            name: "{{include "apps-dashboard.fullname" $}}"
+  tls:
+    - hosts:
+        - "{{.Values.ingress.host}}"
+      secretName: "apps-dashboard-cert"
+  hosts:
+    - host: "{{.Values.ingress.host}}"
+      paths:
+        - path: "/"
+          backend:
+            name: "{{include "apps-dashboard.fullname" $}}"
+            port:
+              name: "{{include "apps-dashboard.fullname" $}}"
 
 
 deployment:
