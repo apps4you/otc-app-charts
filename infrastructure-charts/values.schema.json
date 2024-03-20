@@ -1,0 +1,99 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "projectValues": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Values from outside for example Terraform."
+    },
+    "global": {
+      "type": "object",
+      "description": "This section holds properties that apply globally across the entire schema.",
+      "properties": {
+        "helm": {
+          "type": "object",
+          "description": "This object holds the properties related to the Helm, a package manager for Kubernetes.",
+          "properties": {
+            "repoURL": {
+              "type": "string",
+              "description": "URL of the Helm repository."
+            },
+            "targetRevision": {
+              "type": "string",
+              "description": "The specific version or branch of the chart that should be deployed."
+            },
+            "parameters": {
+              "type": "object",
+              "additionalProperties": true,
+              "description": "A set of key-value pairs representing configuration parameters specific to Helm."
+            }
+          }
+        }
+      }
+    },
+    "charts": {
+      "type": "object",
+      "description": "Here you register and configure the helm charts.",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "If the chart should be deployed or not (default true)."
+          },
+          "namespace": {
+            "type": "string",
+            "description": "The Kubernetes namespace where the chart should be deployed."
+          },
+          "repoURL": {
+            "type": "string",
+            "description": "URL of the Helm repository containing the chart."
+          },
+          "targetRevision": {
+            "type": "string",
+            "description": "The specific version or branch of the chart that should be deployed."
+          },
+          "overrideChartName": {
+            "type": "string",
+            "description": "An optional property to override the default name of the chart."
+          },
+          "disableAutoSync": {
+            "type": "boolean",
+            "description": "Boolean value to enable or disable automatic synchronization of the chart through ArgoCD (default false)."
+          },
+          "parameters": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "A set of key-value pairs representing chart-specific configuration parameters. Max 10",
+            "maxProperties": 10,
+            "properties": {
+              "image.tag": {
+                "type": "string",
+                "additionalProperties": false,
+                "description": "Docker image version"
+              }
+            }
+          },
+          "path": {
+            "type": "string",
+            "description": "The local path to the helm chart which is inside a git repo."
+          },
+          "valueFile": {
+            "type": "string",
+            "description": "The local path to a values file to be used when deploying the chart."
+          },
+          "annotations": {
+            "type": "object",
+            "description": "Add annotations to the argocd app"
+          },
+          "preventDelete": {
+            "type": "boolean",
+            "description": "Boolean value that determines whether deletion of the deployed chart is prevented or allowed (default false)."
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}
